@@ -17,7 +17,7 @@ export interface SubjectInfo {
   id: SubjectId;
   name: string;
   icon: string;
-  category: 'STEM' | 'Humanities' | 'Commerce' | 'General';
+  category: 'STEM' | 'Humanities' | 'Commerce' | 'General' | 'Technical Programming' | string;
   description: string;
   topicsCount: number;
   masteryPercent: number;
@@ -185,4 +185,167 @@ export interface StudentProfile {
   weeklyActivity: { day: string; questions: number; minutes: number }[];
   aiRecommendations: string[];
   joinedDate: string;
+}
+
+// Learning Level (1-5, enforced by data)
+export type LevelNumber = 1 | 2 | 3 | 4 | 5;
+export type LevelStatus = 'locked' | 'unlocked' | 'in_progress' | 'completed';
+export type MasteryTier = 'Novice' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Master';
+export type DifficultyLevel = 'Beginner' | 'Elementary' | 'Intermediate' | 'Advanced' | 'Expert';
+
+export interface LearningLevel {
+  number: LevelNumber;
+  name: string; // e.g. 'Foundations', 'Core Concepts', 'Applied Skills', 'Problem Solving', 'Mastery'
+  description: string;
+  status: LevelStatus;
+  xpRequired: number; // XP needed to unlock this level
+  xpEarned: number;
+  topicsCount: number;
+  completedTopics: number;
+  color: string; // tailwind color name e.g. 'orange'
+  icon: string; // emoji or icon name
+  prerequisiteLevelNumber: LevelNumber | null;
+}
+
+export interface TopicNode {
+  id: string;
+  subjectId: SubjectId;
+  levelNumber: LevelNumber;
+  name: string;
+  description: string;
+  masteryPercent: number; // 0-100
+  masteryTier: MasteryTier;
+  isUnlocked: boolean;
+  isCompleted: boolean;
+  prerequisiteTopicIds: string[];
+  xpValue: number;
+  questionsAvailable: number;
+  questionsAttempted: number;
+  estimatedMinutes: number;
+  tags: string[];
+}
+
+export interface XPEvent {
+  id: string;
+  type: 'question_correct' | 'streak_bonus' | 'level_complete' | 'topic_mastered' | 'daily_login' | 'achievement';
+  amount: number;
+  description: string;
+  timestamp: string;
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string; // emoji
+  category: 'streak' | 'accuracy' | 'speed' | 'mastery' | 'exploration' | 'social';
+  isUnlocked: boolean;
+  unlockedAt?: string;
+  progress: number; // 0-100
+  condition: string; // human readable e.g. 'Answer 100 questions correctly'
+  xpReward: number;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  earnedAt: string;
+}
+
+export interface StudentXPProfile {
+  studentId: string;
+  totalXP: number;
+  currentLevel: LevelNumber;
+  currentLevelXP: number; // XP within current level
+  xpToNextLevel: number;
+  rank: string; // e.g. 'Scholar', 'Expert', 'Legend'
+  streakDays: number;
+  longestStreak: number;
+  lastActiveDate: string;
+  achievements: Achievement[];
+  badges: Badge[];
+  xpHistory: XPEvent[];
+}
+
+export interface AdaptiveQuestion extends PracticeQuestion {
+  levelNumber: LevelNumber;
+  topicId: string;
+  hintLevel1: string; // gentle nudge
+  hintLevel2: string; // formula/approach hint
+  hintLevel3: string; // step-by-step starter
+  hintsUsed: number;
+  timesAttempted: number;
+  timesCorrect: number;
+  adaptiveDifficulty: DifficultyLevel;
+  nextQuestionIfCorrect?: string; // question id
+  nextQuestionIfWrong?: string; // question id
+  concepts: string[];
+  tags: string[];
+}
+
+export interface PracticeSession {
+  id: string;
+  subjectId: SubjectId;
+  topicId: string;
+  levelNumber: LevelNumber;
+  mode: 'adaptive' | 'exam' | 'revision' | 'daily' | 'challenge';
+  questions: AdaptiveQuestion[];
+  currentIndex: number;
+  answers: { questionId: string; selectedIndex: number; isCorrect: boolean; hintsUsed: number; timeSpentMs: number }[];
+  startedAt: string;
+  completedAt?: string;
+  xpEarned: number;
+  score: number; // percentage
+  status: 'active' | 'completed' | 'abandoned';
+  timerSeconds?: number; // for exam mode
+}
+
+export interface StudyPlan {
+  id: string;
+  studentId: string;
+  generatedAt: string;
+  targetExam?: string;
+  targetDate?: string;
+  dailyMinutes: number;
+  days: StudyPlanDay[];
+  weeklyGoal: string;
+  currentStreak: number;
+}
+
+export interface StudyPlanDay {
+  date: string;
+  dayLabel: string; // 'Monday', 'Today', etc.
+  tasks: StudyPlanTask[];
+  isCompleted: boolean;
+  isToday: boolean;
+}
+
+export interface StudyPlanTask {
+  id: string;
+  type: 'topic_study' | 'practice' | 'revision' | 'exam_prep';
+  subject: string;
+  topic: string;
+  estimatedMinutes: number;
+  isCompleted: boolean;
+  xpReward: number;
+}
+
+export interface LearningPath {
+  subjectId: SubjectId;
+  levels: LearningLevel[];
+  topics: TopicNode[];
+  currentLevelNumber: LevelNumber;
+  overallMastery: number; // 0-100
+}
+
+export interface WeeklyProgress {
+  weekLabel: string;
+  days: { day: string; xp: number; questionsAnswered: number; minutesStudied: number; isToday: boolean }[];
+  totalXP: number;
+  totalQuestions: number;
+  totalMinutes: number;
+  goalXP: number;
 }

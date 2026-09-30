@@ -133,6 +133,72 @@ export const INITIAL_SUBJECTS: SubjectInfo[] = [
     popularTopics: ["Nobel Prize Winners", "UN Bodies", "Space Missions", "World Geography Records", "Constitutional Law Basics"],
     color: "from-yellow-500 to-amber-600",
   },
+  {
+    id: "python",
+    name: "Python",
+    icon: "Code",
+    category: "Technical Programming",
+    description: "Core Python, Data Structures, OOP, and popular libraries.",
+    topicsCount: 20,
+    masteryPercent: 0,
+    popularTopics: ["Lists & Dictionaries", "Decorators", "Generators"],
+    color: "from-blue-500 to-yellow-500",
+  },
+  {
+    id: "javascript",
+    name: "JavaScript",
+    icon: "Code",
+    category: "Technical Programming",
+    description: "ES6+, Async programming, DOM manipulation.",
+    topicsCount: 25,
+    masteryPercent: 0,
+    popularTopics: ["Promises", "Closures", "Array Methods"],
+    color: "from-yellow-400 to-yellow-600",
+  },
+  {
+    id: "data-science",
+    name: "Data Science",
+    icon: "Database",
+    category: "Technical Programming",
+    description: "Pandas, NumPy, Data Visualization, and Statistics.",
+    topicsCount: 18,
+    masteryPercent: 0,
+    popularTopics: ["Data Cleaning", "Matplotlib", "Statistical Testing"],
+    color: "from-green-500 to-blue-500",
+  },
+  {
+    id: "web-development",
+    name: "Web Development",
+    icon: "Globe",
+    category: "Technical Programming",
+    description: "HTML, CSS, React, Node.js and Full Stack architecture.",
+    topicsCount: 30,
+    masteryPercent: 0,
+    popularTopics: ["React Hooks", "CSS Grid", "REST APIs"],
+    color: "from-purple-500 to-pink-500",
+  },
+  {
+    id: "machine-learning",
+    name: "Machine Learning",
+    icon: "Brain",
+    category: "Technical Programming",
+    description: "Supervised/Unsupervised Learning, Neural Networks, Scikit-learn.",
+    topicsCount: 22,
+    masteryPercent: 0,
+    popularTopics: ["Linear Regression", "Decision Trees", "Deep Learning basics"],
+    color: "from-red-500 to-orange-500",
+  },
+  {
+    id: "cybersecurity",
+    name: "Cybersecurity",
+    icon: "Shield",
+    category: "Technical Programming",
+    description: "Network security, Cryptography, Ethical Hacking basics.",
+    topicsCount: 15,
+    masteryPercent: 0,
+    popularTopics: ["Encryption", "Vulnerability Scanning", "Firewalls"],
+    color: "from-gray-700 to-gray-900",
+  }
 ];
 
 export const INITIAL_FLASHCARDS: Flashcard[] = [
@@ -324,3 +390,9 @@ $$\\int u \\, dv = u v - \\int v \\, du$$
     createdAt: "2026-09-27T10:30:00Z"
   }
 ];
+
+export const PRACTICE_QUESTIONS = PRACTICE_QUESTIONS_BANK;
+
+export function getPracticeQuestions(subjectId: string): PracticeQuestion[] {
+  return PRACTICE_QUESTIONS.filter(q => q.subjectId === subjectId || subjectId === 'all');
+}

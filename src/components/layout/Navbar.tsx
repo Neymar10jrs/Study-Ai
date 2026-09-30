@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { NotificationsPopover } from "@/components/notifications/NotificationsPopover";
 import { StudentProfile } from "@/types";
+import { Zap, Flame } from "lucide-react";
 import {
   Sparkles,
   Camera,
@@ -102,8 +103,25 @@ export function Navbar({
           })}
         </nav>
 
-        {/* Right Side: Search, Notifications, Profile & Primary CTA */}
+        {/* Right Side: XP, Search, Notifications, Profile & Primary CTA */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Compact XP indicator */}
+          <button
+            onClick={() => onTabChange("dashboard")}
+            className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-orange-500/10 border border-orange-500/20 hover:border-orange-500/40 transition-all group"
+            title="View your XP progress"
+          >
+            <Zap className="h-3.5 w-3.5 text-orange-400" />
+            <span className="text-xs font-bold text-orange-300">{(() => {
+              try { const p = JSON.parse(localStorage.getItem('studyai_xp_profile') || '{}'); return (p.totalXP || 320).toLocaleString(); } catch { return '320'; }
+            })()} XP</span>
+            <span className="text-xs text-gray-500">·</span>
+            <Flame className="h-3 w-3 text-orange-500" />
+            <span className="text-xs font-semibold text-orange-400">{(() => {
+              try { const p = JSON.parse(localStorage.getItem('studyai_xp_profile') || '{}'); return p.streakDays || 3; } catch { return 3; }
+            })()}d</span>
+          </button>
+
           {/* Global Search Button */}
           <button
             onClick={onOpenSearch}
