@@ -123,6 +123,10 @@ export interface PracticeQuestion {
   explanation: string;
   conceptTested: string;
   similarQuestionPrompt?: string;
+  whyCorrect?: string;
+  wrongOptionExplanations?: Record<number, string>;
+  commonPitfall?: string;
+  keyRule?: string;
 }
 
 export interface Flashcard {
